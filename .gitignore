@@ -2,3 +2,6 @@
 *.env
 *.tokens
 /.tokens
+
+# Virtual Environments
+.venv
