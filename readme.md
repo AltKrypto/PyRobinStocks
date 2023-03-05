@@ -15,3 +15,7 @@ home_dir = os.getcwd()
 '''
 
 This changes the pickle path to the root of the project folder for storing login sessions as needed. 
+
+Methods can be added to usermethods.py and called within the main loop to be executed. 
+
+A simple call to show todays date and dividends paid to the account is included

@@ -3,5 +3,3 @@ from usermethods import *
 
 login()
 
-div = dividends()
-print(div)
