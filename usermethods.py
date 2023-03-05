@@ -16,4 +16,6 @@ def dividends():
     today = str(date.today())
     divi = round(rh.account.get_total_dividends(), 2)
     return [today, divi]
-    
+
+def account():
+    pass
