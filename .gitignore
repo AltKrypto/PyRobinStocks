@@ -1,0 +1,4 @@
+# Sensitive Environment Variables
+*.env
+*.tokens
+/.tokens
