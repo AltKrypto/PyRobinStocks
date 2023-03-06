@@ -1,21 +1,63 @@
-from os import environ
+import os
 from dotenvy import load_env, read_file
 import pyotp
 import robin_stocks.robinhood as rh
 from datetime import date
+import csv
 
 def login():
+    # Handles logging in to the Robinhood API
     load_env(read_file('.env'))
-    user = environ.get('username')
-    passw = environ.get('password')
-    auth = environ.get('auth')
+    user = os.environ.get('username')
+    passw = os.environ.get('password')
+    auth = os.environ.get('auth')
     totp = pyotp.TOTP(auth).now()
     login = rh.login(user, passw, mfa_code = totp)
+    
+def cleanUp():
+    # Closes the current and purges all previous sessions
+    rh.logout
+    purge = os.listdir('.tokens')
+    for i in purge:
+        os.remove(f'.tokens/{i}')
+    print('You have been logged out and all sessions have been purged!')
 
 def dividends():
+    # Returns todays date and the total dividends paid
     today = str(date.today())
     divi = round(rh.account.get_total_dividends(), 2)
     return [today, divi]
 
 def account():
-    pass
+    # Returns basic Robinhood account information
+    account = rh.build_user_profile()
+    return account
+    
+def holdings():
+    # Returns a raw collection of dicts for all positions
+    print('Loading your positions.....')
+    print('Please be patient, this may take several minutes.')
+    positions = rh.build_holdings()
+    return positions
+    
+def divTrackCsv():
+    # Exports position data to csv for importing into DivTracker
+    tickers =[]
+    resolved = []
+    field_names = ['Ticker', 'Quantity', 'Cost Per Share', 'Date']
+    today = str(date.today())
+    pos = holdings()
+    for i in pos.keys():
+        tickers.append(i)
+    for i in tickers:
+        ticker = i
+        shares = (pos[i]['quantity'])
+        cost = (pos[i]['average_buy_price'])
+        itter = {'Ticker': ticker, 'Quantity': shares, 'Cost Per Share': cost, 'Date': today}
+        resolved.append(itter)
+    print('Generating CSV')
+    with open('positions.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=field_names)
+        writer.writeheader()
+        writer.writerows(resolved)
+    print('File exported as positions.csv')

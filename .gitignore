@@ -5,3 +5,6 @@
 
 # Virtual Environments
 .venv
+
+# Sensitive Positions Data
+positions.csv
