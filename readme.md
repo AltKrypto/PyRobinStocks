@@ -10,11 +10,13 @@
  Site packages/robin_stocks/robinhood/authentication.Py
  + change line 83 to:
 
-''' python
+```
 home_dir = os.getcwd()
-'''
+```
 
-This changes the pickle path to the root of the project folder for storing login sessions as needed. 
+This changes the pickle path to the root of the project folder for storing login sessions as needed. If using robin_stocks on mobile this change is required as the iOS sandbox does not allow access to the users directory as it was intended.
+
+A cleanup function is included within usermethods to properly logout and clear all previous sessions.  
 
 Methods can be added to usermethods.py and called within main.py to be executed. 
 
