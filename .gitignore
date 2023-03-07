@@ -8,3 +8,6 @@
 
 # Sensitive Positions Data
 positions.csv
+
+# IDE files
+*.idea
