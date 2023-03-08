@@ -26,6 +26,7 @@ def dividends():
     # Returns todays date and the total dividends paid
     today = str(date.today())
     divi = round(rh.account.get_total_dividends(), 2)
+    print(f'As of {today} you have made {divi} in dividends')
     return [today, divi]
 
 def account():
@@ -56,7 +57,7 @@ def divTrackCsv():
         itter = {'Ticker': ticker, 'Quantity': shares, 'Cost Per Share': cost, 'Date': today}
         resolved.append(itter)
     print('Generating CSV')
-    with open('positions.csv', 'w') as csvfile:
+    with open('dbmodules/positions.csv', 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(resolved)
