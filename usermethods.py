@@ -76,7 +76,7 @@ def divTrackCsv():
 #
 
     
-    def tickerTable():
+def tickerToTable():
     # create and connect to database
     connection = sq.connect('test.db')
     curs = connection.cursor()
