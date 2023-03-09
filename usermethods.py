@@ -4,6 +4,12 @@ import pyotp
 import robin_stocks.robinhood as rh
 from datetime import date
 import csv
+import sqlite3 as sq
+import pandas as pd
+
+#
+#             STANDARD FUNCTIONS
+#
 
 def login():
     # Handles logging in to the Robinhood API
@@ -50,6 +56,7 @@ def divTrackCsv():
     pos = holdings()
     for i in pos.keys():
         tickers.append(i)
+        tickers.sort()
     for i in tickers:
         ticker = i
         shares = (pos[i]['quantity'])
@@ -57,8 +64,33 @@ def divTrackCsv():
         itter = {'Ticker': ticker, 'Quantity': shares, 'Cost Per Share': cost, 'Date': today}
         resolved.append(itter)
     print('Generating CSV')
-    with open('dbmodules/positions.csv', 'w') as csvfile:
+    with open('positions.csv', 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(resolved)
     print('File exported as positions.csv')
+    
+    
+#
+#           DATABASE MANIPLUATION
+#
+
+    
+    def tickerTable():
+    # create and connect to database
+    connection = sq.connect('test.db')
+    curs = connection.cursor()
+    # creates a table for storing ticker names
+    curs.execute("create table if not exists tickers" + " (ticker text)")
+    # reads the ticker names from positions and outputs them as a column in the "tickers" table in the "positions" database
+    data = pd.read_csv('positions.csv', usecols=['Ticker'])
+    data.to_sql('tickers', connection, if_exists='replace', index=True)
+    # select all the records
+    curs.execute('select * from tickers')
+    # fetch the records that were selected
+    records = curs.fetchall()
+    for row in records:
+    	print(row)
+    # close the database
+    connection.close()
+    
