@@ -12,3 +12,7 @@ positions.csv
 
 # IDE files
 *.idea
+
+# python run configs
+__pycache__
+/__pycache__

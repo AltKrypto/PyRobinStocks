@@ -7,6 +7,8 @@ import csv
 import sqlite3 as sq
 import pandas as pd
 
+
+
 #
 #             STANDARD FUNCTIONS
 #
@@ -64,7 +66,7 @@ def divTrackCsv():
         itter = {'Ticker': ticker, 'Quantity': shares, 'Cost Per Share': cost, 'Date': today}
         resolved.append(itter)
     print('Generating CSV')
-    with open('positions.csv', 'w') as csvfile:
+    with open('data/positions.csv', 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(resolved)
@@ -75,22 +77,15 @@ def divTrackCsv():
 #           DATABASE MANIPLUATION
 #
 
-    
 def tickerToTable():
     # create and connect to database
-    connection = sq.connect('test.db')
+    connection = sq.connect('data/test.db')
     curs = connection.cursor()
     # creates a table for storing ticker names
     curs.execute("create table if not exists tickers" + " (ticker text)")
     # reads the ticker names from positions and outputs them as a column in the "tickers" table in the "positions" database
-    data = pd.read_csv('positions.csv', usecols=['Ticker'])
+    data = pd.read_csv('data/positions.csv', usecols=['Ticker'])
     data.to_sql('tickers', connection, if_exists='replace', index=True)
-    # select all the records
-    curs.execute('select * from tickers')
-    # fetch the records that were selected
-    records = curs.fetchall()
-    for row in records:
-    	print(row)
     # close the database
     connection.close()
     
