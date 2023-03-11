@@ -37,7 +37,8 @@ class Session():
     purge = os.listdir('.tokens')
     for i in purge:
       os.remove(f'.tokens/{i}')
-    print('You have been logged out and all sessions have been purged!')
+    connection.close
+    print('Successfully logged out, database connection closed and all session history purged.')
 
 
 #
@@ -64,6 +65,10 @@ class Returns():
     print('Please be patient, this may take several minutes.')
     positions = rh.build_holdings()
     return positions
+    
+  def cash():
+    cash = float(rh.profiles.load_account_profile('cash'))
+    return cash
 
 
 #
